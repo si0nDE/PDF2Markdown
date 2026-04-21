@@ -140,3 +140,17 @@ test('ordered list with ) delimiter preserved', () => {
   expect(result).toContain('1) First')
   expect(result).toContain('2) Second')
 })
+
+test('consecutive monospace items → single code block', () => {
+  const pages = [{
+    pageNum: 1,
+    items: [
+      item('const x = 1', 12, 'Courier'),
+      item('const y = 2', 12, 'Courier'),
+    ],
+    images: [],
+  }]
+  const result = generateMarkdown(pages)
+  expect(result).toContain('```\nconst x = 1\nconst y = 2\n```')
+  expect(result.match(/```/g)).toHaveLength(2) // only one opening and one closing fence
+})

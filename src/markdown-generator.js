@@ -7,7 +7,7 @@ function isMonospace(fontName) {
   return MONOSPACE_NAMES.some(m => lower.includes(m))
 }
 
-function averageFontSize(pages) {
+function medianFontSize(pages) {
   const sizes = []
   for (const page of pages) {
     for (const item of page.items) {
@@ -27,7 +27,10 @@ function detectRepeated(pages) {
   if (pages.length < 2) return new Set()
   const counts = {}
   for (const page of pages) {
+    const seen = new Set()
     for (const item of page.items) {
+      if (seen.has(item.text)) continue
+      seen.add(item.text)
       counts[item.text] = (counts[item.text] ?? 0) + 1
     }
   }
@@ -38,39 +41,52 @@ function detectRepeated(pages) {
   )
 }
 
-function renderItem(item, avg) {
+function renderItem(item, median) {
   const text = item.text.trim()
   if (!text) return null
 
-  const ratio = item.fontSize / avg
+  const ratio = item.fontSize / median
   if (ratio >= 1.8) return `# ${text}`
   if (ratio >= 1.4) return `## ${text}`
   if (ratio >= 1.2) return `### ${text}`
 
   if (BULLET_RE.test(text)) return `- ${text.replace(BULLET_RE, '')}`
   if (ORDERED_RE.test(text)) return text
-  if (isMonospace(item.fontName)) return `\`\`\`\n${text}\n\`\`\``
 
   return text
 }
 
 export function generateMarkdown(pages) {
   const repeated = detectRepeated(pages)
-  const avg = averageFontSize(pages)
+  const median = medianFontSize(pages)
   let imageCounter = 1
 
   const parts = pages.map(page => {
     const lines = []
 
-    for (const item of page.items) {
-      if (repeated.has(item.text)) continue
-      const rendered = renderItem(item, avg)
-      if (rendered) lines.push(rendered)
+    const filteredItems = page.items.filter(item => !repeated.has(item.text))
+    let i = 0
+    while (i < filteredItems.length) {
+      const item = filteredItems[i]
+      if (isMonospace(item.fontName)) {
+        const codeLines = []
+        while (i < filteredItems.length && isMonospace(filteredItems[i].fontName)) {
+          const t = filteredItems[i].text.trim()
+          if (t) codeLines.push(t)
+          i++
+        }
+        lines.push('```\n' + codeLines.join('\n') + '\n```')
+      } else {
+        const rendered = renderItem(item, median)
+        if (rendered) lines.push(rendered)
+        i++
+      }
     }
 
     for (const image of page.images) {
       if (image.ocrText) {
-        lines.push(`<!-- Bild ${imageCounter}: ${image.ocrText} -->`)
+        const safeOcr = image.ocrText.replace(/-->/g, '-- >')
+        lines.push(`<!-- Bild ${imageCounter}: ${safeOcr} -->`)
       }
       lines.push(`![Abbildung ${imageCounter}](${image.dataUrl})`)
       imageCounter++

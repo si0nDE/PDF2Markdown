@@ -108,3 +108,35 @@ test('image counter is global across pages', () => {
   expect(result).toContain('![Abbildung 1]')
   expect(result).toContain('![Abbildung 2]')
 })
+
+test('slightly-large font → H3', () => {
+  const pages = [{
+    pageNum: 1,
+    items: [item('Subsection', 15), item('normal', 12), item('normal', 12)],
+    images: [],
+  }]
+  expect(generateMarkdown(pages)).toMatch(/^### Subsection/m)
+})
+
+test('dash/star/em-dash bullets → markdown list', () => {
+  const pages = [{
+    pageNum: 1,
+    items: [item('- Dash'), item('* Star'), item('– Em-dash')],
+    images: [],
+  }]
+  const result = generateMarkdown(pages)
+  expect(result).toContain('- Dash')
+  expect(result).toContain('- Star')
+  expect(result).toContain('- Em-dash')
+})
+
+test('ordered list with ) delimiter preserved', () => {
+  const pages = [{
+    pageNum: 1,
+    items: [item('1) First'), item('2) Second')],
+    images: [],
+  }]
+  const result = generateMarkdown(pages)
+  expect(result).toContain('1) First')
+  expect(result).toContain('2) Second')
+})

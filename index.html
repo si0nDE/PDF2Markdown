@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF → Markdown</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>PDF → Markdown</h1>
+      <p>Browser-basiert · Datenschutzfreundlich · Für Claude optimiert</p>
+    </header>
+
+    <section id="upload-section">
+      <div id="drop-zone">
+        <p>PDF hier ablegen oder</p>
+        <label for="file-input">Datei auswählen</label>
+        <input type="file" id="file-input" accept=".pdf" />
+      </div>
+      <div id="file-info" hidden>
+        <span id="file-name"></span>
+        <span id="page-count"></span>
+        <div id="size-indicator" class="indicator"></div>
+      </div>
+      <div id="page-range" hidden>
+        <label>Seitenbereich (PDF hat über 100 Seiten):</label>
+        <input type="number" id="range-start" min="1" placeholder="Von" />
+        <span>–</span>
+        <input type="number" id="range-end" min="1" placeholder="Bis" />
+      </div>
+      <div id="password-section" hidden>
+        <label for="pdf-password">PDF ist passwortgeschützt:</label>
+        <input type="password" id="pdf-password" placeholder="Passwort eingeben" />
+        <button id="unlock-btn">Entsperren</button>
+        <span id="password-error" hidden style="color:red">Falsches Passwort</span>
+      </div>
+      <button id="convert-btn" hidden>Konvertieren</button>
+    </section>
+
+    <section id="progress-section" hidden>
+      <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+      </div>
+      <p id="progress-status"></p>
+    </section>
+
+    <section id="output-section" hidden>
+      <div id="output-controls">
+        <button id="toggle-view-btn">Raw anzeigen</button>
+        <button id="copy-btn">Kopieren</button>
+        <div id="download-options"></div>
+      </div>
+      <div id="output-preview"></div>
+      <textarea id="output-raw" hidden></textarea>
+    </section>
+
+    <div id="kofi-banner" hidden>
+      <p>Hat dir das Tool geholfen? Unterstütze die Entwicklung ☕</p>
+      <a href="https://ko-fi.com/" target="_blank" rel="noopener">Auf Ko-fi unterstützen →</a>
+    </div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "markdown2pdf",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "fflate": "^0.8.2",
+    "marked": "^12.0.0",
+    "pdfjs-dist": "^4.4.168",
+    "tesseract.js": "^5.1.0"
+  },
+  "devDependencies": {
+    "vite": "^5.2.0",
+    "vitest": "^1.6.0",
+    "jsdom": "^24.0.0"
+  }
+}

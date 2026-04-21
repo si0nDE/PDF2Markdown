@@ -20,7 +20,7 @@ const RECOMMENDATIONS = [
 ]
 
 export function analyzeSize(bytes) {
-  const mb = Math.round((bytes / (1024 * 1024)) * 100) / 100
+  const mb = parseFloat((bytes / (1024 * 1024)).toFixed(2))
 
   if (bytes < GREEN_THRESHOLD) {
     return { status: 'green', bytes, mb }

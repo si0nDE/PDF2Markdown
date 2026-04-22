@@ -14,7 +14,11 @@ export async function ocrImage(dataUrl) {
   // Lazy initialization: create worker only on first call
   if (worker === null) {
     try {
-      worker = await createWorker('deu+eng')
+      worker = await createWorker('deu+eng', 1, {
+        workerPath: '/tesseract/worker.min.js',
+        corePath: '/tesseract',
+        langPath: '/tesseract',
+      })
     } catch (err) {
       const e = Object.assign(new Error(err.message), { code: 'OCR_UNAVAILABLE' })
       throw e

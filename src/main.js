@@ -4,16 +4,22 @@ import { showOutput } from './ui/output.js'
 import { showProgress, updateProgress, showDone, hideProgress } from './ui/progress.js'
 import { getCurrentFile, getPageRange } from './ui/upload.js'
 import { convertPDF } from './pipeline.js'
+import { analyzeSize } from './size-analyzer.js'
 
 document.getElementById('convert-btn').addEventListener('click', async () => {
   const file = getCurrentFile()
   if (!file) return
 
   showProgress()
+  updateProgress('loading')
 
   try {
-    const options = { pageRange: getPageRange() }
-    const { markdown, sizeInfo } = await convertPDF(file, options, updateProgress)
+    const sizeInfo = analyzeSize(file.size)
+    const options = {
+      pageRange: getPageRange(),
+      onProgress: ({ status, page, total }) => updateProgress(status, page, total),
+    }
+    const { markdown } = await convertPDF(file, options)
     showDone()
     setTimeout(() => {
       hideProgress()

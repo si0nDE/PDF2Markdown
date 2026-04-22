@@ -54,6 +54,7 @@ header p { color: var(--muted); margin-top: 0.25rem; font-size: 0.95rem; }
 #drop-zone.dragover {
   border-color: var(--accent);
   background: var(--accent-subtle);
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
   box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent);
 }
 #drop-zone p { color: var(--muted); margin-bottom: 0.5rem; }

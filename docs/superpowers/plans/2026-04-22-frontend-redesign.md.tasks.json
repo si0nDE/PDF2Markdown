@@ -1,0 +1,25 @@
+{
+  "planPath": "docs/superpowers/plans/2026-04-22-frontend-redesign.md",
+  "tasks": [
+    {
+      "id": 10,
+      "subject": "Task 0: CSS Token System, Dark Mode & Visual Refresh",
+      "status": "pending",
+      "description": "**Goal:** Replace all hardcoded colors in `style.css` with CSS custom properties and add automatic dark mode.\n\n**Files:**\n- Modify: `src/style.css`\n\n**Acceptance Criteria:**\n- [ ] `:root` block defines 9 tokens\n- [ ] `@media (prefers-color-scheme: dark)` overrides all 9 tokens\n- [ ] No hardcoded color values remain (except Ko-fi orange)\n- [ ] Drop-zone hover uses `box-shadow` + border-color\n- [ ] `header h1` has `letter-spacing: -0.02em`\n- [ ] Progress bar height is `8px`\n- [ ] All interactive `border-radius` is `8px`\n\n**Verify:** `npm run dev` → toggle system dark/light mode → no artifacts\n\n```json:metadata\n{\"files\": [\"src/style.css\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"9 CSS tokens in :root\", \"dark mode override block\", \"no hardcoded colors\", \"box-shadow on dragover\", \"letter-spacing on h1\", \"progress bar 8px\", \"border-radius 8px\"]}\n```"
+    },
+    {
+      "id": 11,
+      "subject": "Task 1: HTML Structure Updates",
+      "status": "pending",
+      "description": "**Goal:** Update `index.html` to remove Claude tagline, add options toggle markup, and add legal footer.\n\n**Files:**\n- Modify: `index.html`\n\n**Acceptance Criteria:**\n- [ ] Subtitle reads \"Browser-basiert · Datenschutzfreundlich\"\n- [ ] `#page-range` replaced by `#options-toggle` + `#options-panel`\n- [ ] `#options-panel` has `range-start` and `range-end` inputs\n- [ ] `<footer>` at end of `#app` with Impressum/Datenschutz links to fieber-it.com\n\n**Verify:** `npm run dev` → page loads, footer visible\n\n```json:metadata\n{\"files\": [\"index.html\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"subtitle no Claude mention\", \"options-toggle + options-panel in DOM\", \"footer with two links\"]}\n```"
+    },
+    {
+      "id": 12,
+      "subject": "Task 2: JS Options Toggle Wiring",
+      "status": "pending",
+      "blockedBy": [11],
+      "description": "**Goal:** Update `upload.js` to wire options toggle and remove old >100-page auto-show logic.\n\n**Files:**\n- Modify: `src/ui/upload.js`\n\n**Acceptance Criteria:**\n- [ ] `#page-range` ref removed, replaced with `#options-toggle` + `#options-panel`\n- [ ] Toggle shown after file loads and after password unlock\n- [ ] Click toggles panel + updates button text ▼/▲\n- [ ] `getPageRange()` returns null when panel hidden\n- [ ] Old `numPages > 100` logic removed\n- [ ] `npm test` passes\n\n**Verify:** `npm test` → all pass; manual: upload PDF → Optionen toggle works → convert respects range\n\n```json:metadata\n{\"files\": [\"src/ui/upload.js\"], \"verifyCommand\": \"npm test\", \"acceptanceCriteria\": [\"no #page-range ref\", \"toggle visible after load\", \"getPageRange returns null when hidden\", \"numPages>100 logic gone\", \"tests pass\"]}\n```"
+    }
+  ],
+  "lastUpdated": "2026-04-22T20:10:00Z"
+}

@@ -1,0 +1,89 @@
+{
+  "planPath": "docs/superpowers/plans/2026-04-21-pdf-to-markdown.md",
+  "tasks": [
+    {
+      "id": 0,
+      "subject": "Task 0: Project Setup",
+      "status": "completed",
+      "description": "**Goal:** Working Vite project with Vitest, all dependencies installed.\n\n**Files:**\n- Create: `package.json`\n- Create: `vite.config.js`\n- Create: `index.html`\n- Create: `src/main.js`\n\n**Verify:** `npm run test` → `No test files found` (exit 0)\n\n```json:metadata\n{\"files\": [\"package.json\", \"vite.config.js\", \"index.html\", \"src/main.js\"], \"verifyCommand\": \"npm run test\", \"acceptanceCriteria\": [\"npm run dev starts on localhost:5173\", \"npm run test exits 0\", \"npm run build produces dist/\"]}\n```"
+    },
+    {
+      "id": 1,
+      "subject": "Task 1: Size Analyzer",
+      "status": "completed",
+      "blockedBy": [0],
+      "description": "**Goal:** Pure function classifying file size with status and recommendations.\n\n**Files:**\n- Create: `src/size-analyzer.js`\n- Create: `src/__tests__/size-analyzer.test.js`\n\n**Verify:** `npm run test src/__tests__/size-analyzer.test.js` → 3 tests pass\n\n```json:metadata\n{\"files\": [\"src/size-analyzer.js\", \"src/__tests__/size-analyzer.test.js\"], \"verifyCommand\": \"npm run test src/__tests__/size-analyzer.test.js\", \"acceptanceCriteria\": [\"green < 500KB\", \"yellow 500KB-2MB\", \"red > 2MB with 3 recommendations\"]}\n```"
+    },
+    {
+      "id": 2,
+      "subject": "Task 2: Markdown Generator",
+      "status": "completed",
+      "blockedBy": [0],
+      "description": "**Goal:** Pure function converting PageData[] to clean Markdown string.\n\n**Files:**\n- Create: `src/markdown-generator.js`\n- Create: `src/__tests__/markdown-generator.test.js`\n\n**Verify:** `npm run test src/__tests__/markdown-generator.test.js` → 11 tests pass\n\n```json:metadata\n{\"files\": [\"src/markdown-generator.js\", \"src/__tests__/markdown-generator.test.js\"], \"verifyCommand\": \"npm run test src/__tests__/markdown-generator.test.js\", \"acceptanceCriteria\": [\"heading detection\", \"bullet/ordered list\", \"monospace code blocks\", \"header/footer removal\", \"page breaks\", \"image embedding\"]}\n```"
+    },
+    {
+      "id": 3,
+      "subject": "Task 3: PDF Extractor",
+      "status": "completed",
+      "blockedBy": [0],
+      "description": "**Goal:** PDF.js wrapper extracting text items and images per page.\n\n**Files:**\n- Create: `src/pdf-extractor.js`\n- Create: `src/__tests__/pdf-extractor.test.js`\n\n**Verify:** `npm run test src/__tests__/pdf-extractor.test.js` → all tests pass\n\n```json:metadata\n{\"files\": [\"src/pdf-extractor.js\", \"src/__tests__/pdf-extractor.test.js\"], \"verifyCommand\": \"npm run test src/__tests__/pdf-extractor.test.js\", \"acceptanceCriteria\": [\"loadPDF returns doc and numPages\", \"PASSWORD_REQUIRED thrown\", \"extractPage correct shape\", \"corrupt pages handled\"]}\n```"
+    },
+    {
+      "id": 4,
+      "subject": "Task 4: OCR Engine",
+      "status": "completed",
+      "blockedBy": [0],
+      "description": "**Goal:** Lazy-loaded Tesseract.js wrapper — worker created only on first use.\n\n**Files:**\n- Create: `src/ocr-engine.js`\n- Create: `src/__tests__/ocr-engine.test.js`\n\n**Verify:** `npm run test src/__tests__/ocr-engine.test.js` → all tests pass\n\n```json:metadata\n{\"files\": [\"src/ocr-engine.js\", \"src/__tests__/ocr-engine.test.js\"], \"verifyCommand\": \"npm run test src/__tests__/ocr-engine.test.js\", \"acceptanceCriteria\": [\"lazy initialization\", \"worker reuse\", \"OCR_UNAVAILABLE on failure\", \"teardown works\"]}\n```"
+    },
+    {
+      "id": 5,
+      "subject": "Task 5: Conversion Pipeline",
+      "status": "completed",
+      "blockedBy": [1, 2, 3, 4],
+      "description": "**Goal:** Orchestrates extraction + OCR + generation with progress callbacks.\n\n**Files:**\n- Create: `src/pipeline.js`\n- Create: `src/__tests__/pipeline.test.js`\n\n**Verify:** `npm run test src/__tests__/pipeline.test.js` → all tests pass\n\n```json:metadata\n{\"files\": [\"src/pipeline.js\", \"src/__tests__/pipeline.test.js\"], \"verifyCommand\": \"npm run test src/__tests__/pipeline.test.js\", \"acceptanceCriteria\": [\"scanned page detection\", \"image OCR\", \"corrupt page placeholder\", \"page range option\", \"progress callbacks\"]}\n```"
+    },
+    {
+      "id": 6,
+      "subject": "Task 6: Exporter",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "**Goal:** Download helpers for .md, ZIP, split pages, text-only.\n\n**Files:**\n- Create: `src/exporter.js`\n- Create: `src/__tests__/exporter.test.js`\n\n**Verify:** `npm run test src/__tests__/exporter.test.js` → all tests pass\n\n```json:metadata\n{\"files\": [\"src/exporter.js\", \"src/__tests__/exporter.test.js\"], \"verifyCommand\": \"npm run test src/__tests__/exporter.test.js\", \"acceptanceCriteria\": [\"downloadMarkdown works\", \"stripImages removes image lines\", \"downloadZip creates ZIP\"]}\n```"
+    },
+    {
+      "id": 7,
+      "subject": "Task 7: Styling",
+      "status": "pending",
+      "blockedBy": [0],
+      "description": "**Goal:** Complete CSS for all UI sections.\n\n**Files:**\n- Create: `src/style.css`\n\n**Verify:** `npm run dev` → http://localhost:5173 → all sections styled.\n\n```json:metadata\n{\"files\": [\"src/style.css\"], \"verifyCommand\": \"npm run dev\", \"acceptanceCriteria\": [\"drop zone styled\", \"size indicator colors\", \"progress bar transition\", \"responsive layout\"]}\n```"
+    },
+    {
+      "id": 8,
+      "subject": "Task 8: Upload UI Module",
+      "status": "pending",
+      "blockedBy": [3, 7],
+      "description": "**Goal:** Drop zone, file picker, password handling, page range, convert button.\n\n**Files:**\n- Create: `src/ui/upload.js`\n\n**Verify:** Manual browser test.\n\n```json:metadata\n{\"files\": [\"src/ui/upload.js\"], \"verifyCommand\": \"manual browser test\", \"acceptanceCriteria\": [\"drag-drop works\", \"file info shown\", \"password prompt for protected PDFs\", \"page range for 100+ pages\"]}\n```"
+    },
+    {
+      "id": 9,
+      "subject": "Task 9: Progress UI Module",
+      "status": "pending",
+      "blockedBy": [7],
+      "description": "**Goal:** Progress bar and status messages driven by onProgress callbacks.\n\n**Files:**\n- Create: `src/ui/progress.js`\n\n**Verify:** Manual browser test.\n\n```json:metadata\n{\"files\": [\"src/ui/progress.js\"], \"verifyCommand\": \"manual browser test\", \"acceptanceCriteria\": [\"progress bar updates\", \"status messages correct\", \"done state 100%\"]}\n```"
+    },
+    {
+      "id": 10,
+      "subject": "Task 10: Output UI + Main Wiring",
+      "status": "pending",
+      "blockedBy": [5, 6, 7, 8, 9],
+      "description": "**Goal:** Output section, ko-fi banner, full app wiring in main.js.\n\n**Files:**\n- Create: `src/ui/output.js`\n- Modify: `src/main.js`\n\n**Verify:** Manual browser test.\n\n```json:metadata\n{\"files\": [\"src/ui/output.js\", \"src/main.js\"], \"verifyCommand\": \"manual browser test\", \"acceptanceCriteria\": [\"markdown preview renders\", \"copy works\", \"download buttons work\", \"ko-fi banner visible\", \"OCR error message shown\"]}\n```"
+    },
+    {
+      "id": 11,
+      "subject": "Task 11: Production Build Verification",
+      "status": "pending",
+      "blockedBy": [10],
+      "description": "**Goal:** npm run build succeeds; built app handles full conversion in preview.\n\n**Files:**\n- Modify: `vite.config.js` (only if build fails)\n\n**Verify:** `npm run build && npm run preview` → manual conversion test.\n\n```json:metadata\n{\"files\": [\"vite.config.js\"], \"verifyCommand\": \"npm run build && npm run preview\", \"acceptanceCriteria\": [\"build exits 0\", \"preview serves working app\", \"full conversion works in preview\"]}\n```"
+    }
+  ],
+  "lastUpdated": "2026-04-22T09:35:00.000Z"
+}

@@ -24,13 +24,13 @@
         <span id="page-count"></span>
         <div id="size-indicator" class="indicator"></div>
       </div>
-      <button id="options-toggle" type="button" hidden>⚙ Optionen ▼</button>
+      <button id="options-toggle" type="button" hidden aria-expanded="false" aria-controls="options-panel">⚙ Optionen ▼</button>
       <div id="options-panel" hidden>
         <label for="range-start">Seiten von</label>
         <input type="number" id="range-start" min="1" placeholder="1" />
         <span>–</span>
         <label for="range-end">bis</label>
-        <input type="number" id="range-end" min="1" />
+        <input type="number" id="range-end" min="1" placeholder="Ende" />
       </div>
       <div id="password-section" hidden>
         <label for="pdf-password">PDF ist passwortgeschützt:</label>
@@ -64,8 +64,8 @@
     </div>
 
     <footer>
-      <a href="https://fieber-it.com/impressum" target="_blank" rel="noopener">Impressum</a>
-      <a href="https://fieber-it.com/datenschutz" target="_blank" rel="noopener">Datenschutz</a>
+      <a href="https://fieber-it.com/impressum" target="_blank" rel="noopener noreferrer">Impressum</a>
+      <a href="https://fieber-it.com/datenschutz" target="_blank" rel="noopener noreferrer">Datenschutz</a>
     </footer>
   </div>
   <script type="module" src="/src/main.js"></script>

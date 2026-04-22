@@ -1,4 +1,4 @@
-import { vi, describe, test, expect, beforeEach, afterEach } from 'vitest'
+import { vi, describe, test, expect, beforeEach } from 'vitest'
 
 // Store created worker instances for inspection in tests
 let createdWorkers = []
@@ -19,56 +19,59 @@ vi.mock('tesseract.js', () => {
   }
 })
 
-import { createWorker } from 'tesseract.js'
-import { recognizeImage, teardown } from '../ocr-engine.js'
+let ocrImage, ocrPage, teardown
+
+beforeEach(async () => {
+  vi.resetModules()
+  vi.clearAllMocks()
+  createdWorkers = []
+  const mod = await import('../ocr-engine.js')
+  ocrImage = mod.ocrImage
+  ocrPage = mod.ocrPage
+  teardown = mod.teardown
+})
 
 describe('ocr-engine', () => {
-  afterEach(async () => {
-    // Reset module state between tests
-    await teardown()
-    createdWorkers = []
-    vi.clearAllMocks()
-  })
-
-  test('lazy init: createWorker not called before first recognizeImage', async () => {
-    // Import fresh module to check initial state
+  test('lazy init: createWorker not called before first ocrImage', async () => {
     const { createWorker: cwMock } = await import('tesseract.js')
     expect(cwMock).not.toHaveBeenCalled()
 
-    // Now call recognizeImage and it should call createWorker
-    await recognizeImage('data:image/png;base64,test')
+    // Now call ocrImage and it should call createWorker
+    await ocrImage('data:image/png;base64,test')
     expect(cwMock).toHaveBeenCalledOnce()
   })
 
-  test('worker reuse: createWorker called once for multiple recognizeImage calls', async () => {
-    const cwMock = createWorker
+  test('worker reuse: createWorker called once for multiple ocrImage calls', async () => {
+    const { createWorker: cwMock } = await import('tesseract.js')
 
     // First call
-    await recognizeImage('data:image/png;base64,test1')
+    await ocrImage('data:image/png;base64,test1')
     expect(cwMock).toHaveBeenCalledTimes(1)
 
     // Second call reuses same worker
-    await recognizeImage('data:image/png;base64,test2')
+    await ocrImage('data:image/png;base64,test2')
     expect(cwMock).toHaveBeenCalledTimes(1) // Still called once total
   })
 
-  test('recognizeImage returns { text: ... } from worker', async () => {
-    const result = await recognizeImage('data:image/png;base64,test')
-    expect(result).toEqual({ text: 'Mocked OCR text' })
+  test('ocrImage returns trimmed string from worker', async () => {
+    const result = await ocrImage('data:image/png;base64,test')
+    expect(typeof result).toBe('string')
+    expect(result).toBe('Mocked OCR text')
   })
 
   test('OCR_UNAVAILABLE thrown on initialization failure', async () => {
-    createWorker.mockRejectedValueOnce(new Error('Worker initialization failed'))
+    const { createWorker: cwMock } = await import('tesseract.js')
+    cwMock.mockRejectedValueOnce(new Error('Worker initialization failed'))
 
-    await expect(recognizeImage('data:image/png;base64,test')).rejects.toMatchObject({
+    await expect(ocrImage('data:image/png;base64,test')).rejects.toMatchObject({
       code: 'OCR_UNAVAILABLE',
       message: 'Worker initialization failed',
     })
   })
 
   test('teardown terminates worker', async () => {
-    // Initialize worker by calling recognizeImage
-    await recognizeImage('data:image/png;base64,test')
+    // Initialize worker by calling ocrImage
+    await ocrImage('data:image/png;base64,test')
 
     const worker = createdWorkers[0]
     expect(worker.terminate).not.toHaveBeenCalled()
@@ -77,11 +80,11 @@ describe('ocr-engine', () => {
     expect(worker.terminate).toHaveBeenCalled()
   })
 
-  test('after teardown, next recognizeImage call re-initializes worker', async () => {
-    const cwMock = createWorker
+  test('after teardown, next ocrImage call re-initializes worker', async () => {
+    const { createWorker: cwMock } = await import('tesseract.js')
 
     // First call initializes
-    await recognizeImage('data:image/png;base64,test1')
+    await ocrImage('data:image/png;base64,test1')
     expect(cwMock).toHaveBeenCalledTimes(1)
 
     // Teardown
@@ -91,24 +94,36 @@ describe('ocr-engine', () => {
     cwMock.mockClear()
 
     // Next call re-initializes
-    await recognizeImage('data:image/png;base64,test2')
+    await ocrImage('data:image/png;base64,test2')
     expect(cwMock).toHaveBeenCalledTimes(1)
   })
 
-  test('recognizeImage passes correct language to createWorker', async () => {
-    const cwMock = createWorker
+  test('ocrImage passes correct language to createWorker', async () => {
+    const { createWorker: cwMock } = await import('tesseract.js')
 
-    await recognizeImage('data:image/png;base64,test')
+    await ocrImage('data:image/png;base64,test')
 
-    expect(cwMock).toHaveBeenCalledWith('eng')
+    expect(cwMock).toHaveBeenCalledWith('deu+eng')
   })
 
-  test('recognizeImage calls worker.recognize with correct image source', async () => {
+  test('ocrImage calls worker.recognize with correct image source', async () => {
     const dataUrl = 'data:image/png;base64,abc123'
 
-    await recognizeImage(dataUrl)
+    await ocrImage(dataUrl)
 
     const worker = createdWorkers[0]
     expect(worker.recognize).toHaveBeenCalledWith(dataUrl)
+  })
+
+  test('ocrPage delegates to ocrImage via canvas.toDataURL', async () => {
+    const fakeDataUrl = 'data:image/png;base64,canvasdata'
+    const canvas = {
+      toDataURL: vi.fn().mockReturnValue(fakeDataUrl),
+    }
+
+    const result = await ocrPage(canvas)
+
+    expect(canvas.toDataURL).toHaveBeenCalledWith('image/png')
+    expect(result).toBe('Mocked OCR text')
   })
 })

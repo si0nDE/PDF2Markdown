@@ -7,7 +7,8 @@ const fileInfo = document.getElementById('file-info')
 const fileNameEl = document.getElementById('file-name')
 const pageCountEl = document.getElementById('page-count')
 const sizeIndicator = document.getElementById('size-indicator')
-const pageRange = document.getElementById('page-range')
+const optionsToggle = document.getElementById('options-toggle')
+const optionsPanel = document.getElementById('options-panel')
 const rangeStart = document.getElementById('range-start')
 const rangeEnd = document.getElementById('range-end')
 const passwordSection = document.getElementById('password-section')
@@ -21,12 +22,19 @@ let currentFile = null
 export function getCurrentFile() { return currentFile }
 
 export function getPageRange() {
-  if (pageRange.hidden) return null
+  if (optionsPanel.hidden) return null
   return {
     start: parseInt(rangeStart.value) || 1,
     end: parseInt(rangeEnd.value) || 1,
   }
 }
+
+optionsToggle.addEventListener('click', () => {
+  const open = !optionsPanel.hidden
+  optionsPanel.hidden = open
+  optionsToggle.setAttribute('aria-expanded', String(!open))
+  optionsToggle.textContent = open ? '⚙ Optionen ▼' : '⚙ Optionen ▲'
+})
 
 async function handleFile(file) {
   if (!file || !file.name.toLowerCase().endsWith('.pdf')) return
@@ -39,23 +47,22 @@ async function handleFile(file) {
   if (sizeInfo.warning) sizeIndicator.title = sizeInfo.warning
 
   fileInfo.hidden = false
+  optionsToggle.hidden = true
+  optionsToggle.setAttribute('aria-expanded', 'false')
+  optionsToggle.textContent = '⚙ Optionen ▼'
+  optionsPanel.hidden = true
   passwordSection.hidden = true
   passwordError.hidden = true
-  pageRange.hidden = true
   convertBtn.hidden = true
   pageCountEl.textContent = 'Lädt…'
 
   try {
     const { numPages } = await loadPDF(file)
     pageCountEl.textContent = `${numPages} Seiten`
-
-    if (numPages > 100) {
-      rangeStart.value = 1
-      rangeEnd.value = Math.min(numPages, 50)
-      rangeEnd.max = numPages
-      pageRange.hidden = false
-    }
-
+    rangeEnd.max = numPages
+    rangeStart.value = 1
+    rangeEnd.value = numPages
+    optionsToggle.hidden = false
     convertBtn.hidden = false
   } catch (err) {
     if (err.code === 'PASSWORD_REQUIRED') {
@@ -72,7 +79,11 @@ unlockBtn.addEventListener('click', async () => {
   try {
     const { numPages } = await loadPDF(currentFile, pdfPassword.value)
     pageCountEl.textContent = `${numPages} Seiten`
+    rangeEnd.max = numPages
+    rangeStart.value = 1
+    rangeEnd.value = numPages
     passwordSection.hidden = true
+    optionsToggle.hidden = false
     convertBtn.hidden = false
   } catch {
     pdfPassword.style.borderColor = 'red'

@@ -92,7 +92,7 @@ header p { color: var(--muted); margin-top: 0.25rem; font-size: 0.95rem; }
   color: var(--accent);
   font-size: 0.82rem;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 8px;
   transition: background 0.15s;
 }
 #options-toggle:hover { background: var(--accent-subtle); }
@@ -115,7 +115,7 @@ header p { color: var(--muted); margin-top: 0.25rem; font-size: 0.95rem; }
   width: 80px;
   padding: 0.3rem 0.5rem;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.9rem;
   background: var(--surface);
   color: var(--text);
@@ -132,7 +132,7 @@ header p { color: var(--muted); margin-top: 0.25rem; font-size: 0.95rem; }
 #pdf-password {
   padding: 0.3rem 0.6rem;
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   font-size: 0.9rem;
   background: var(--surface);
   color: var(--text);
@@ -141,7 +141,7 @@ header p { color: var(--muted); margin-top: 0.25rem; font-size: 0.95rem; }
   padding: 0.3rem 0.75rem;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
   color: var(--text);

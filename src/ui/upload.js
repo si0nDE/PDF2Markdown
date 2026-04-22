@@ -25,15 +25,18 @@ export function getPageRange() {
   if (optionsPanel.hidden) return null
   return {
     start: parseInt(rangeStart.value) || 1,
-    end: parseInt(rangeEnd.value) || 1,
+    end: parseInt(rangeEnd.value) || parseInt(rangeEnd.max) || 1,
   }
 }
 
+function setToggleOpen(open) {
+  optionsPanel.hidden = !open
+  optionsToggle.setAttribute('aria-expanded', String(open))
+  optionsToggle.textContent = open ? '⚙ Optionen ▲' : '⚙ Optionen ▼'
+}
+
 optionsToggle.addEventListener('click', () => {
-  const open = !optionsPanel.hidden
-  optionsPanel.hidden = open
-  optionsToggle.setAttribute('aria-expanded', String(!open))
-  optionsToggle.textContent = open ? '⚙ Optionen ▼' : '⚙ Optionen ▲'
+  setToggleOpen(optionsPanel.hidden)
 })
 
 async function handleFile(file) {
@@ -48,9 +51,7 @@ async function handleFile(file) {
 
   fileInfo.hidden = false
   optionsToggle.hidden = true
-  optionsToggle.setAttribute('aria-expanded', 'false')
-  optionsToggle.textContent = '⚙ Optionen ▼'
-  optionsPanel.hidden = true
+  setToggleOpen(false)
   passwordSection.hidden = true
   passwordError.hidden = true
   convertBtn.hidden = true

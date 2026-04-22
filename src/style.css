@@ -1,1 +1,212 @@
-/* Styles will be added in Task 7 */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f9fafb;
+  color: #111827;
+  line-height: 1.6;
+  padding: 1rem;
+}
+
+#app { max-width: 860px; margin: 0 auto; }
+
+header { text-align: center; padding: 2rem 0 1.5rem; }
+header h1 { font-size: 2rem; font-weight: 700; }
+header p { color: #6b7280; margin-top: 0.25rem; font-size: 0.95rem; }
+
+/* ── Upload ── */
+
+#drop-zone {
+  border: 2px dashed #d1d5db;
+  border-radius: 10px;
+  padding: 3rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  background: #fff;
+  transition: border-color 0.2s, background 0.2s;
+}
+#drop-zone.dragover { border-color: #4f46e5; background: #eef2ff; }
+#drop-zone p { color: #6b7280; margin-bottom: 0.5rem; }
+#drop-zone label { color: #4f46e5; cursor: pointer; text-decoration: underline; font-weight: 500; }
+#file-input { display: none; }
+
+#file-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+}
+#file-name { font-weight: 600; }
+#page-count { color: #6b7280; }
+
+.indicator {
+  padding: 0.2rem 0.7rem;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.indicator.green { background: #d1fae5; color: #065f46; }
+.indicator.yellow { background: #fef3c7; color: #92400e; }
+.indicator.red { background: #fee2e2; color: #991b1b; }
+
+#page-range {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+#page-range input[type="number"] {
+  width: 80px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+#password-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+#pdf-password {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+#unlock-btn {
+  padding: 0.3rem 0.75rem;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+#unlock-btn:hover { background: #e5e7eb; }
+
+#convert-btn {
+  display: block;
+  margin: 1.5rem auto 0;
+  padding: 0.75rem 3rem;
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#convert-btn:hover { background: #4338ca; }
+
+/* ── Progress ── */
+
+#progress-section { margin-top: 2rem; }
+
+#progress-bar-container {
+  background: #e5e7eb;
+  border-radius: 99px;
+  height: 10px;
+  overflow: hidden;
+}
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #4f46e5;
+  border-radius: 99px;
+  transition: width 0.35s ease;
+}
+#progress-status { margin-top: 0.6rem; color: #6b7280; font-size: 0.9rem; }
+
+/* ── Output ── */
+
+#output-section { margin-top: 2rem; }
+
+#output-controls {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+#output-controls button {
+  padding: 0.4rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.15s;
+}
+#output-controls button:hover { background: #f3f4f6; }
+
+#download-options { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-left: auto; }
+#download-options button { background: #f0fdf4; border-color: #86efac; color: #166534; }
+#download-options button:hover { background: #dcfce7; }
+
+#output-preview {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  background: #fff;
+  max-height: 65vh;
+  overflow-y: auto;
+  font-size: 0.95rem;
+}
+#output-preview h1 { font-size: 1.6rem; margin: 1.25rem 0 0.5rem; }
+#output-preview h2 { font-size: 1.3rem; margin: 1rem 0 0.4rem; }
+#output-preview h3 { font-size: 1.1rem; margin: 0.75rem 0 0.3rem; }
+#output-preview p { margin-bottom: 0.75rem; }
+#output-preview ul, #output-preview ol { padding-left: 1.5rem; margin-bottom: 0.75rem; }
+#output-preview pre { background: #f3f4f6; padding: 0.75rem 1rem; border-radius: 4px; overflow-x: auto; }
+#output-preview table { border-collapse: collapse; width: 100%; margin-bottom: 0.75rem; }
+#output-preview th, #output-preview td { border: 1px solid #e5e7eb; padding: 0.35rem 0.7rem; text-align: left; }
+#output-preview th { background: #f9fafb; font-weight: 600; }
+#output-preview img { max-width: 100%; border-radius: 4px; margin: 0.5rem 0; }
+#output-preview hr { border: none; border-top: 1px solid #e5e7eb; margin: 1.5rem 0; }
+
+#output-raw {
+  width: 100%;
+  height: 65vh;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 0.825rem;
+  line-height: 1.5;
+  resize: vertical;
+  background: #fafafa;
+}
+
+/* ── Ko-fi ── */
+
+#kofi-banner {
+  margin-top: 2rem;
+  padding: 0.875rem 1.25rem;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+}
+#kofi-banner a { color: #ea580c; font-weight: 600; text-decoration: none; }
+#kofi-banner a:hover { text-decoration: underline; }
+
+/* ── Responsive ── */
+
+@media (max-width: 600px) {
+  #output-controls { flex-direction: column; align-items: flex-start; }
+  #download-options { margin-left: 0; }
+  #convert-btn { width: 100%; }
+}

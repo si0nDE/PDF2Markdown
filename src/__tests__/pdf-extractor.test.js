@@ -91,6 +91,32 @@ describe('extractPage', () => {
     expect(result.images).toEqual([])
   })
 
+  test('images array contains entry with dataUrl and ocrText: null when image operator present', async () => {
+    const mockCtx = {}
+    const mockCanvas = {
+      width: 0,
+      height: 0,
+      getContext: vi.fn().mockReturnValue(mockCtx),
+      toDataURL: vi.fn().mockReturnValue('data:image/png;base64,abc123'),
+    }
+    vi.spyOn(document, 'createElement').mockReturnValue(mockCanvas)
+
+    const page = {
+      getTextContent: vi.fn().mockResolvedValue({ items: [] }),
+      getOperatorList: vi.fn().mockResolvedValue({ fnArray: [85], argsArray: [] }),
+      getViewport: vi.fn().mockReturnValue({ width: 600, height: 800 }),
+      render: vi.fn().mockReturnValue({ promise: Promise.resolve() }),
+    }
+    const doc = makeMockDoc([page])
+
+    const result = await extractPage(doc, 1)
+
+    expect(result.images).toHaveLength(1)
+    expect(result.images[0]).toEqual({ dataUrl: expect.any(String), ocrText: null })
+
+    vi.restoreAllMocks()
+  })
+
   test('returns corrupt error for failed pages', async () => {
     const doc = {
       numPages: 1,

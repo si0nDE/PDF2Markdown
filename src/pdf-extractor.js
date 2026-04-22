@@ -34,11 +34,12 @@ export async function loadPDF(file, password = '') {
 }
 
 export async function extractPage(doc, pageNum) {
+  let page, items, rawTextLength
   try {
-    const page = await doc.getPage(pageNum)
+    page = await doc.getPage(pageNum)
     const content = await page.getTextContent()
 
-    const items = content.items.map(item => ({
+    items = content.items.map(item => ({
       text: item.str,
       fontSize: Math.abs(item.transform[0]),
       fontName: item.fontName ?? 'unknown',
@@ -46,19 +47,28 @@ export async function extractPage(doc, pageNum) {
       y: item.transform[5],
     }))
 
-    const rawTextLength = items.reduce((sum, i) => sum + i.text.length, 0)
-    const images = await extractImages(page)
-
-    return { pageNum, items, images, rawTextLength }
+    rawTextLength = items.reduce((sum, i) => sum + i.text.length, 0)
   } catch {
     return { pageNum, items: [], images: [], rawTextLength: 0, error: 'corrupt' }
   }
+
+  let images = []
+  try {
+    images = await extractImages(page)
+  } catch (err) {
+    console.warn(`extractImages failed on page ${pageNum}:`, err)
+  }
+
+  return { pageNum, items, images, rawTextLength }
 }
 
+const OPS_PAINT_IMAGE_X_OBJECT = 85
+
 async function extractImages(page) {
+  if (typeof document === 'undefined') return []
+
   const opList = await page.getOperatorList()
-  // PDF.js OPS.paintImageXObject = 85
-  const hasImage = opList.fnArray.includes(85)
+  const hasImage = opList.fnArray.includes(OPS_PAINT_IMAGE_X_OBJECT)
   if (!hasImage) return []
 
   const viewport = page.getViewport({ scale: 2 })

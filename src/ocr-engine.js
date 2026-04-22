@@ -8,7 +8,7 @@ let worker = null
  *
  * @param {string} dataUrl - Data URL of the image to recognize (e.g., 'data:image/png;base64,...')
  * @returns {Promise<string>} - Trimmed recognized text string
- * @throws {Object} - Object with code: 'OCR_UNAVAILABLE' if worker initialization fails
+ * @throws {Error} - Error with code: 'OCR_UNAVAILABLE' if worker initialization fails
  */
 export async function ocrImage(dataUrl) {
   // Lazy initialization: create worker only on first call
@@ -16,17 +16,19 @@ export async function ocrImage(dataUrl) {
     try {
       worker = await createWorker('deu+eng')
     } catch (err) {
-      throw {
-        code: 'OCR_UNAVAILABLE',
-        message: err.message,
-      }
+      const e = Object.assign(new Error(err.message), { code: 'OCR_UNAVAILABLE' })
+      throw e
     }
   }
 
   // Recognize text using the worker
-  const { data: { text } } = await worker.recognize(dataUrl)
-
-  return text.trim()
+  try {
+    const { data: { text } } = await worker.recognize(dataUrl)
+    return text.trim()
+  } catch (err) {
+    worker = null
+    throw err
+  }
 }
 
 /**

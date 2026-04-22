@@ -115,6 +115,25 @@ describe('ocr-engine', () => {
     expect(worker.recognize).toHaveBeenCalledWith(dataUrl)
   })
 
+  test('worker reset on recognize failure allows re-initialization on next call', async () => {
+    const { createWorker: cwMock } = await import('tesseract.js')
+
+    // First call initializes worker successfully
+    await ocrImage('data:image/png;base64,test1')
+    expect(cwMock).toHaveBeenCalledTimes(1)
+
+    // Make recognize throw on the next call
+    const brokenWorker = createdWorkers[0]
+    brokenWorker.recognize.mockRejectedValueOnce(new Error('recognize failed'))
+
+    // Second call should throw
+    await expect(ocrImage('data:image/png;base64,test2')).rejects.toThrow('recognize failed')
+
+    // Third call must re-initialize (createWorker called again)
+    await ocrImage('data:image/png;base64,test3')
+    expect(cwMock).toHaveBeenCalledTimes(2)
+  })
+
   test('ocrPage delegates to ocrImage via canvas.toDataURL', async () => {
     const fakeDataUrl = 'data:image/png;base64,canvasdata'
     const canvas = {
